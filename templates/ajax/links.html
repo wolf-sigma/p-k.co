@@ -1,0 +1,259 @@
+<script>
+	$(function() {
+		$( "#accordion" ).accordion();
+	});
+</script>
+
+<script>
+	$(function() {
+		var id_name = $( "#id_name" ),
+			id_long_url_default = $( "#id_long_url_default" ),
+			allFields = $( [] ).add( id_long_url_default ).add( id_name )
+			var tips = $( ".validateTips" );
+
+		function updateTips( t ) {
+			tips
+				.text( t )
+				.addClass( "ui-state-highlight" );
+			setTimeout(function() {
+				tips.removeClass( "ui-state-highlight", 1500 );
+			}, 500 );
+		}
+
+		function checkRequired( o, n) {
+			if ( o.val().length < 1 ) {
+				o.addClass( "ui-state-error" );
+				updateTips(n + ' is required.');
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		function checkRegexp( o, regexp, n ) {
+			if ( !( regexp.test( o.val() ) ) ) {
+				o.addClass( "ui-state-error" );
+				updateTips( n );
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		function addAjaxError( o, n ) {
+			o.addClass( "ui-state-error" );
+			updateTips( n );
+		}
+
+		$( "#add-link-form" ).dialog({
+			autoOpen: false,
+			width: 350,
+			modal: true,
+			buttons: {
+				"Save": function() {
+					var bValid = true;
+					allFields.removeClass( "ui-state-error" );
+					bValid = bValid && checkRequired( id_name, "Name");
+					bValid = bValid && checkRequired( id_long_url_default, "Default URL");
+					if ( bValid ) {
+						$.ajax({
+							type: "POST",
+							url: "{% url createlink %}",
+							data: $("#al-form").serialize(),
+							dataType: 'json'
+						}).done(function( data ) {
+							if (!data.success){
+								var i = 0;
+								for (i=0;i<=data.errors.length;i++)
+								{
+									var o = $("#"+data.errors[i].field);
+									var n = data.errors[i].error;
+									addAjaxError(o,n)
+								}
+							 }
+							else {
+								$( "#add-link-form" ).dialog( "close" )
+								$( "#tabs" ).tabs("load", 0);
+							 }
+						}).error(function(XMLHttpRequest, textStatus,  errorThrown){
+							alert(textStatus + errorThrown);
+						});
+					}
+				},
+				Cancel: function() {
+					$( "#add-link-form" ).dialog( "close" )
+				}
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+
+		$( "#create-link" )
+			.click(function() {
+				alert('blob');
+				$( "#add-link-form" ).dialog( "open" );
+			});
+	});
+</script>
+
+<script>
+	$(function() {
+		$( "#create-link-button" ).button();
+		$( "#create-link-button" ).click(function() { $( "#add-link-form" ).dialog( "open" ); });
+	});
+</script>
+<div style="text-align: right;">
+	<button id="create-link-button">Add</button>
+</div>
+<div id="accordion">
+	{% for l in links %}
+		<h3><a href="#">{{ l.name }} - {{ l.link_total_click }} clicks</a></h3>
+		<div>
+		<div style="float: right">
+			<a href="/{{ l.base_64 }}.qr"><img src='{{ l.qr_code }}' width="100" height="100"/></a>
+		</div>
+			<table style="color: #FFFFFF">
+				<tr>
+					<td>
+						Details:
+					</td>
+					<td>
+						<a href="{{l.short_link }}">{{l.short_link }}</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Description:
+					</td>
+					<td>
+						{{ l.description }}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Total Clicks:
+					</td>
+					<td>
+						{{ l.link_total_click }}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Default URL:
+					</td>
+					<td>
+						<a href="{{l.default_url }}">{{l.short_default_url }}</a>
+					</td>
+				</tr>
+				{% if iphone_url %}
+					<tr style="width:800px;">
+						<td>
+							iPhone URL:
+						</td>
+						<td>
+							<a href="{{l.iphone_url }}">{{l.short_iphone_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+				{% if ipad_url %}
+					<tr style="width:800px;">
+						<td>
+							iPad URL:
+						</td>
+						<td>
+							<a href="{{l.ipad_url }}">{{l.short_ipad_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+				{% if android_url %}
+					<tr style="width:800px;">
+						<td>
+							Android URL:
+						</td>
+						<td>
+							<a href="{{l.android_url }}">{{l.short_android_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+				{% if blackberry_url %}
+					<tr style="width:800px;">
+						<td>
+							Blackberry URL:
+						</td>
+						<td>
+							<a href="{{l.blackberry_url }}">{{l.short_blackberry_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+				{% if windows_mobile_url %}
+					<tr style="width:800px;">
+						<td>
+							Windows Mobile URL:
+						</td>
+						<td>
+							<a href="{{l.windows_mobile_url }}">{{l.short_windows_mobile_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+				{% if mac_url %}
+					<tr style="width:800px;">
+						<td>
+							Mac URL:
+						</td>
+						<td>
+							<a href="{{l.mac_url }}">{{l.mac_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+				{% if pc_url %}
+					<tr style="width:800px;">
+						<td>
+							Windows Desktop URL:
+						</td>
+						<td>
+							<a href="{{l.pc_url }}">{{l.pc_url }}</a>
+						</td>
+					</tr>
+				{% endif  %}
+			</table>
+		</div>
+	{% empty %}
+		</div>
+		You don't have any links. <a href="#" id="create-link">Create</a> some to see the analytics!
+	{% endfor %}
+{% if links %}
+	</div>
+{% endif %}
+
+<div id="add-link-form" title="Create a link">
+	<p class="validateTips">* are required fields</p>
+	<form action="{% url createlink %}" method="post" id="al-form">
+		<fieldset>
+			{% csrf_token %}
+			<label for="id_name">Name*</label>
+			<input type="text" name="name" id="id_name" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_description">Description:</label>
+			<input type="text" name="description" id="id_description" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_default">Default URL*</label>
+			<input type="text" name="long_url_default" id="id_long_url_default" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_iphone">iPhone URL</label>
+			<input type="text" name="long_url_iphone" id="id_long_url_iphone" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_android">Android URL</label>
+			<input type="text" name="long_url_android" id="id_long_url_android" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_ipad">iPad URL</label>
+			<input type="text" name="long_url_ipad" id="id_long_url_ipad" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_windows_mobile">Windows Mobile URL</label>
+			<input type="text" name="long_url_windows_mobile" id="id_long_url_windows_mobile" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_blackberry">Blackberry URL</label>
+			<input type="text" name="long_url_blackberry" id="id_long_url_blackberry" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_pc">PC URL</label>
+			<input type="text" name="long_url_pc" id="id_long_url_pc" class="text ui-widget-content ui-corner-all"/>
+			<label for="id_long_url_mac">Mac URL</label>
+			<input type="text" name="long_url_mac" id="id_long_url_mac" class="text ui-widget-content ui-corner-all"/>
+			{# TODO: add to form (need styling) #}
+			{# <label for="id_public">Public</label> #}
+			{# <input type="checkbox" name="public" id="id_public" class="text ui-widget-content ui-corner-all"/> #}
+		</fieldset>
+	</form>
+</div>

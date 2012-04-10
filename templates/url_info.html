@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block head_includes %}
+	<link rel="Stylesheet" href="/static/jquery-ui/css/ui-darkness/jquery-ui-1.8.17.custom.css" type="text/css"/>
+	<script type='text/javascript' src="/static/jquery-ui/js/jquery-1.7.1.min.js"></script>
+	<script type='text/javascript' src="/static/jquery-ui/js/jquery-ui-1.8.17.custom.min.js"></script>
+	<script src="/static/highcharts/highcharts.js" type="text/javascript"></script>
+	<script src="/static/highcharts/themes/gray.js" type="text/javascript"></script>
+	<style type="text/css">
+		.ui-tabs .ui-tabs-hide {
+			position: absolute;
+			top: -10000px;
+			display: block;
+		}
+		.ui-widget :active { outline: none; }
+	</style>
+	<script>
+		$(function() {
+			$( "#tabs" ).tabs({
+				ajaxOptions: {
+					error: function( xhr, status, index, anchor ) {
+						$( anchor.hash ).html(
+							"Couldn't load this information. We'll try to fix this as soon as possible.");
+					}
+				}
+			});
+		});
+	</script>
+{% endblock %}
+
+{% block header %}
+	Link Info - {{ name }}
+{%endblock  %}
+
+{% block content %}
+	<div style='padding-bottom: 10px; min-height: 125px'>
+		<div style="float: right; width:125px; height: 125px;">
+			<a href="/{{ base_64 }}.qr"><img src='{{ qr_code }}' height="125" width="125"/></a>
+		</div>
+		<table style="color: #FFFFFF">
+			<tr>
+				<td>
+					Short Link:
+				</td>
+				<td>
+					<a href="{{short_link }}">{{short_link }}</a>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Description:
+				</td>
+				<td>
+					{{ description }}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Total Clicks:
+				</td>
+				<td>
+					{{ link_total_click }}
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Default URL:
+				</td>
+				<td>
+					<a href="{{default_url }}">{{short_default_url }}</a>
+				</td>
+			</tr>
+			{% if iphone_url %}
+				<tr style="width:800px;">
+					<td>
+						iPhone URL:
+					</td>
+					<td>
+						<a href="{{iphone_url }}">{{short_iphone_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+			{% if ipad_url %}
+				<tr style="width:800px;">
+					<td>
+						iPad URL:
+					</td>
+					<td>
+						<a href="{{ipad_url }}">{{short_ipad_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+			{% if android_url %}
+				<tr style="width:800px;">
+					<td>
+						Android URL:
+					</td>
+					<td>
+						<a href="{{android_url }}">{{short_android_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+			{% if blackberry_url %}
+				<tr style="width:800px;">
+					<td>
+						Blackberry URL:
+					</td>
+					<td>
+						<a href="{{blackberry_url }}">{{short_blackberry_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+			{% if windows_mobile_url %}
+				<tr style="width:800px;">
+					<td>
+						Windows Mobile URL:
+					</td>
+					<td>
+						<a href="{{windows_mobile_url }}">{{short_windows_mobile_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+			{% if mac_url %}
+				<tr style="width:800px;">
+					<td>
+						Mac URL:
+					</td>
+					<td>
+						<a href="{{mac_url }}">{{mac_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+			{% if pc_url %}
+				<tr style="width:800px;">
+					<td>
+						Windows Desktop URL:
+					</td>
+					<td>
+						<a href="{{pc_url }}">{{pc_url }}</a>
+					</td>
+				</tr>
+			{% endif  %}
+		</table>
+	</div>
+	<div id="tabs">
+		<ul>
+			<li><a id="devices-link" href="/ajax/devices/?link_id={{ link_id }}">Devices</a></li>
+			<li><a id="locations-link" href="/ajax/locations/?link_id={{ link_id }}">Locations</a></li>
+		</ul>
+	</div>
+
+{%endblock  %}

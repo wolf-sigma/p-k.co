@@ -1,0 +1,135 @@
+{% load chartit %}
+{# {{ device_chart|load_charts:"device_chart" }} #}
+
+{# Export Buttons #}
+<script language="javascript">
+	$(function() {
+		$( "#export_button" ).button();
+	});
+</script>
+{# END Export Button #}
+{# GO Date Button #}
+<script language="javascript">
+	$(function() {
+		$( "#go_button" ).button();
+	});
+	var base_url = {% if not link_id %}
+		"/ajax/devices?begin_date=";
+	{% else %}
+		"/ajax/devices?link_id={{ link_id }}&begin_date=";
+	{% endif %}
+	$( "#go_button" ).click(function() {
+		$( "#tabs" ).tabs("url", 1, base_url + $('#from').val() + '&end_date=' + $('#to').val());
+		$('#tabs').tabs("load", 1);
+	});
+</script>
+{# END GO Date Button #}
+
+{# Picker #}
+<script>
+	$(function() {
+		var dates = $( "#from, #to" ).datepicker({
+			defaultDate: "+1w",
+			changeMonth: true,
+			changeYear: true,
+			numberOfMonths: 1	,
+			onSelect: function( selectedDate ) {
+				var option = this.id == "from" ? "minDate" : "maxDate",
+					instance = $( this ).data( "datepicker" ),
+					date = $.datepicker.parseDate(
+						instance.settings.dateFormat ||
+						$.datepicker._defaults.dateFormat,
+						selectedDate, instance.settings );
+				dates.not( this ).datepicker( "option", option, date );
+			}
+		});
+	});
+	</script>
+{# END Picker #}
+
+{#Chart Code #}
+<script language="javascript">
+var chart;
+$(document).ready(function() {
+	chart = new Highcharts.Chart({
+		chart: {
+			renderTo: 'device_chart',
+			zoomType: 'x',
+			type: 'line'
+		},
+		title: {
+			text: 'Devices'
+		},
+		subtitle: {
+			text: document.ontouchstart === undefined ?
+				'Click and drag left-to-right to zoom in' :
+				'Drag your finger left-to-right to zoom in'
+		},
+		xAxis: {
+			categories: {{ categories }},
+			tickInterval: {{ tick_interval }}
+		},
+		yAxis: {
+            title: {
+                text: 'Clicks'
+            },
+            min: 0,
+            showFirstLabel: false
+        },
+		exporting: {
+			enabled: true,
+			exportButton:{
+				enabled: true
+			}
+		},
+		tooltip: {
+			formatter: function() {
+				var s;
+				if (this.point.name) { // the pie chart
+					s = ''+
+						this.point.name +': '+ this.y +' clicks';
+				} else {
+					s = ''+
+						this.x  +': '+ this.y;
+				}
+				return s;
+			}
+		},
+		plotOptions: {
+			area: {
+				marker: {
+					enabled: false,
+					symbol: 'circle',
+					radius: 2,
+					states: {
+						hover: {
+							enabled: true
+						}
+					}
+				}
+			}
+		},
+		series: {{ series }}
+	});
+});
+</script>
+{#END Chart Code #}
+
+<div>
+	<div style="width:80px; float: left;">
+		<input type="text" id="from" name="from" size="10" class="text ui-widget-content ui-corner-all" value="{{ begin_date }}" />
+	</div>
+	<div style="float: left; padding-left: 15px; padding-top: 7px">
+		to
+	</div>
+	<div style="width:80px; float: left; padding-left: 10px">
+		<input type="text" id="to" name="to" size="10" class="text ui-widget-content ui-corner-all" value="{{ end_date }}"/>
+	</div>
+	<div style="width:90px; float: left; padding-left: 15px">
+		<button id="go_button">Go</button>
+	</div>
+		<div style="text-align: right;">
+		{# <button id="export_button">Export (csv)</button> #}
+	</div>
+</div>
+<div id='device_chart'></div>

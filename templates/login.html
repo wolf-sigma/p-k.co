@@ -1,0 +1,21 @@
+{%  extends "base.html" %}
+
+{% block content %}
+<h1>Login to start sharing links!</h1>
+<form action="/login/" method="post">{% csrf_token %}
+<div id="dialog-form" class="ui-dialog-content ui-widget-content" style="width: auto; min-height: 0px; height: 217px; " scrolltop="0" scrollleft="0">
+
+{% for field in form %}
+	<div class="ui-widget">
+		<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+			<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+			<strong>Error:</strong> {{ field.errors }}</p>
+		</div>
+	</div>
+	{{ field.label_tag }}
+	{{ field }}
+</div>
+{% endfor %}
+<input type="submit" value="Submit" />
+</form>
+{% endblock %}

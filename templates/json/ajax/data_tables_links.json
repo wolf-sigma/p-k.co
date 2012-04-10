@@ -1,0 +1,18 @@
+{
+    "sEcho": {{sEcho}},
+    "iTotalRecords": {{iTotalRecords}},
+    "iTotalDisplayRecords": {{iTotalDisplayRecords}},
+    "aaData":[
+    {% for link in querySet %}
+    [
+    	"{{link.name}}",
+		"{{link.short_link}}"
+		"{{link.category}}",
+		"{{link.clicks}}
+	]
+    {% if not forloop.last %}
+    ,
+    {% endif %}
+    {% endfor %}
+    ]
+}

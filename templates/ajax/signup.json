@@ -1,0 +1,12 @@
+{
+	"success":{{ success }},
+	"errors": [
+		{% for error in errors%}
+			{
+				"field": "id_{{ error.field }}",
+				"error": "{{ error.error }}"
+			}{% if not forloop.last %},{% endif %}	
+		{% endfor%}
+	],
+	"redirect_url": "{{redirect_url}}"
+}

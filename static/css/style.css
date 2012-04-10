@@ -1,0 +1,67 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{ width:100%; height:auto; background:url(/static/image/bg.jpg) repeat-x top #212227; margin:0; padding:0; font-family:Arial;}
+
+
+.body-index{width:100%; height:auto; background:url(/static/image/index-bg.jpg) repeat-x top #16171b; margin:0; padding:0; font-family:Arial;}
+#warp{ width:873px; height:auto; margin:0 auto;}
+.head{ width:873px; height:90px; margin-bottom:10px;}
+.logo{ width:213px; height:40px; background:url(/static/image/logo.jpg) no-repeat; float:left; padding:50px 0 0 97px;}
+h1 { margin:0; padding:0; font-size:14px; color:#a9acb3; font-weight:lighter;}
+.nav{ float:right; padding:35px 20px 0 0; font-size:15px;color:#FFF;}
+.nav a { color:#FFF;text-decoration:none; padding:0 15px;}
+.nav a:hover{ color:#7f9fba; text-decoration:underline;}
+.nav a.active{ color:#7f9fba; text-decoration:underline;}
+.clr{ clear:both;}
+
+.banner{ width:873px; height:349px; margin-bottom:48px;}
+.banner-left{ width:10px; height:349px; background:url(/static/image/banner-left.jpg) no-repeat; float:left;}
+.banner-center{ width:363px; height:324px; background:url(/static/image/banner-bg.jpg); padding:25px 0 0 30px;float:left;}
+h2{ font-size:46px; color:#212227;line-height:38px; font-weight:lighter; margin:0; padding:0;}
+h3{ font-size:24px; color:#626262;font-weight:lighter; margin:0; padding:0;}
+.txt-content{margin-bottom:20px; margin-right:25px;}
+.txt-content p{ font-size:13px; color:#5d6067; line-height:18px;}
+.btn{ width:157px; height:53px;}
+.banner-right{ width:470px; height:349px; background:url(/static/image/iphone.jpg);float:left;}
+
+.content{ width:863px; height:auto; padding:0 5px; }
+.content1{ margin:0 20px; padding:0; float:left; margin-bottom:35px;}
+.content1 span{ font-size:10px; color:#959595; margin:15px 0 5px; display:block; padding:0 0 0 15px;}
+.content1 p{ margin:0; padding:0; color:#c0deed; line-height:18px; font-size:12px;padding:0 0 0 15px;}
+.content1 p a{ color:#c0deed; text-decoration:underline;}
+
+.errorlist { font-size:17px; color:red; margin:0; padding-left:25px; }
+
+
+h4 { font-size:17px; color:#fff; margin:0; padding:0; }
+h3 { font-size:17px; color:#fff; margin:0; padding:0; }
+h2 { font-size:17px; color:#fff; margin:0; padding:0; }
+h1 { font-size:17px; color:#fff; margin:0; padding:0; }
+
+h4 a{ color:#6cd3fe; text-decoration:none;}
+h4 a:hover{ color:#6cd3fe; text-decoration:underline;}
+
+.foot{ width:100%; height:100%; font-size:11px; color:#5d6067; line-height:60px; text-align:center; background:url(/static/image/bottom-bg.jpg) repeat-x top #16171b}
+.foot-index{ width:100%; height:70px; font-size:11px; color:#5d6067; line-height:60px; text-align:center;}
+
+a { color:#FFF;text-decoration:none;}
+a:hover{ color:#7f9fba; text-decoration:underline;}
+a.active{ color:#7f9fba; text-decoration:underline;}
+
+/*----------------about-------------------*/
+.about-banner{ width:798px; min-height:319px; margin-bottom:48px; padding:30px 30px 0 45px}
+h5{ margin:0; padding:0; font-size:30px; color:#FFFFFF; font-weight: lighter; }
+.about-banner p{ margin:10px 0 0 0; padding:0; font-size:13px; color:#c3d7e8; line-height:16px;}
+
+/*---------------to support jquery UI--------*/
+body { font-size: 80%; }
+label, input { display:block; }
+input.text { margin-bottom:12px; width:95%; padding: .4em; }
+fieldset { padding:0; border:0; margin-top:25px; }
+h1 { font-size: 1.2em; margin: .6em 0; }
+div#users-contain { width: 350px; margin: 20px 0; }
+div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }

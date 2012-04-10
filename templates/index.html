@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+		"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>P-K.co</title>
+	<link href="/static/css/style.css" rel="stylesheet" type="text/css"/>
+	<link rel="Stylesheet" href="/static/jquery-ui/css/ui-darkness/jquery-ui-1.8.17.custom.css" type="text/css"/>
+	<script type='text/javascript' src="/static/jquery-ui/js/jquery-1.7.1.js"></script>
+	<script type='text/javascript' src="/static/jquery-ui/js/jquery-ui-1.8.17.custom.min.js"></script>
+	<script>
+	$(function() {
+
+		var id_username = $( "#id_username" ),
+			id_email_address = $( "#id_email_address" ),
+			id_password = $( "#id_password" ),
+			id_confirm_password = $( "#id_confirm_password" ),
+			id_first_name = $( "#id_first_name" ),
+			id_last_name = $( "#id_last_name" ),
+
+			allFields = $( [] ).add( id_username ).add( id_email_address ).add( id_password ).add( id_confirm_password).add( id_first_name).add(id_last_name),
+			tips = $( ".validateTips" );
+
+		function updateTips( t ) {
+			tips
+				.text( t )
+				.addClass( "ui-state-highlight" );
+			setTimeout(function() {
+				tips.removeClass( "ui-state-highlight", 1500 );
+			}, 500 );
+		}
+
+		function checkLength( o, n, min, max ) {
+			if ( o.val().length > max || o.val().length < min ) {
+				o.addClass( "ui-state-error" );
+				updateTips( "Length of " + n + " must be between " +
+					min + " and " + max + "." );
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		function checkRegexp( o, regexp, n ) {
+			if ( !( regexp.test( o.val() ) ) ) {
+				o.addClass( "ui-state-error" );
+				updateTips( n );
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		function addAjaxError( o, n ) {
+			o.addClass( "ui-state-error" );
+			updateTips( n );
+		}
+
+		$( "#signup-form" ).dialog({
+			autoOpen: false,
+			width: 350,
+			modal: true,
+			buttons: {
+				"Signup": function() {
+					var bValid = true;
+					allFields.removeClass( "ui-state-error" );
+					bValid = bValid && checkLength( id_first_name, "First Name", 3, 16 );
+					bValid = bValid && checkLength( id_last_name, "Last Name", 3, 16 );
+					bValid = bValid && checkLength( id_username, "Username", 3, 16 );
+					bValid = bValid && checkLength( id_email_address, "Email Address", 6, 255 );
+					bValid = bValid && checkLength( id_password, "Password", 5, 16 );
+					bValid = bValid && checkLength( id_confirm_password, "Confirm Password", 5, 16 );
+
+					bValid = bValid && checkRegexp( id_username, /^[a-z]([0-9a-z_])+$/i, "Username may consist of a-z, 0-9, underscores, begin with a letter." );
+					// From jquery.validate.js (by joern), contributed by Scott Gonzalez: http://projects.scottsplayground.com/email_address_validation/
+					bValid = bValid && checkRegexp( id_email_address, /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i, "eg. alex@p-k.co" );
+					bValid = bValid && checkRegexp( id_password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+					if ( bValid ) {
+						//var xhr = $.post("/signup/", $("#sign-up-form").serialize(),
+						$.ajax({
+							type: "POST",
+							url: "/signup/",
+							data: $("#sign-up-form").serialize(),
+							dataType: 'json'
+						}).done(function( data ) {
+						 	if (!data.success){
+								var i = 0;
+								for (i=0;i<=data.errors.length;i++)
+								{
+									var o = $("#"+data.errors[i].field);
+									var n = data.errors[i].error;
+									addAjaxError(o,n)
+								}
+							 }
+							else {
+								 window.location = data.redirect_url;
+							 }
+						}).error(function(XMLHttpRequest, textStatus,  errorThrown){
+							alert(textStatus + errorThrown);
+						});
+					}
+				},
+				Cancel: function() {
+					$( "#signup-form" ).dialog( "close" )
+				}
+			},
+			close: function() {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+
+		$( "#sign-up" )
+			.click(function() {
+				$( "#signup-form" ).dialog( "open" );
+			});
+	});
+	</script>
+</head>
+
+<body class='body-index'>
+<div id="warp">
+	<div class="head">
+				<a href="/">
+			<div class="logo"></div>
+		</a>
+
+	<div class="nav"><a href="/">Home</a> |
+		{% if user.is_authenticated %}
+			<a href="/links">Links</a> |
+			<a href="/logout">Logout</a>
+		{% else %}
+			<a href="/login">Login</a>
+		{% endif %}
+		</div>
+		<div class="clr"></div>
+	</div>
+	<div class="banner">
+		<div class="banner-left"></div>
+		<div class="banner-center">
+			<div class="txt-tit">
+				<h3 style="color:#000000">Better short urls</h3>
+			</div>
+			<div class="txt-content">
+				<p>
+					P-K.co is a new url platform that centers around flexibility and power. Need to send users to a
+					different URL based on what the device their on? Done. Need to edit links? Done. The power is in
+					your hands.
+				</p>
+
+				<p>
+					Oh, and it's open source. You can use our servers, or deploy it to your own.
+				</p>
+				<p>
+					<a id="sign-up" href="#" style='color:#000;'>Sign Up</a> today
+				</p>
+			</div>
+		</div>
+		<div class="banner-right"></div>
+		<div class="clr"></div>
+	</div>
+	<div class="content">
+		<div class="content1">
+			<img src="/static/image/aboutapps.jpg" width="241" height="40"/>
+			<span></span>
+
+			<p>P-K.co is powerful, but it's<br/>
+				simple. We were founded on these<br/>
+				principles. <br/>
+		</div>
+		<div class="content1">
+			<img src="../static/image/appsnews.jpg" width="241" height="40"/>
+			<span></span>
+
+			<p>Our blog is coming soon!<br/>
+		</div>
+		<div class="content1">
+			<img src="../static/image/features.jpg" width="241" height="40"/>
+			<span></span>
+
+			<p>We're completely open source - <br/>
+				we'll take code from the community,<br/>
+				and integrate into our own code.<br/>
+				We love open-source, and you're free <br/>
+				to utilize it under the <a href="{% url license %}">MIT License.</a><br/>
+				Visit <a href="http://github.com/">github</a> for the source.</p>
+		</div>
+		<div class="clr"></div>
+		<div class="foot-index">Copyright © 2012 <a href="mailto:info@perrimark.com">Perrimark</a> |
+			<a href="{% url privacy %}">Privacy Policy</a> | <a href="#">API</a>
+		</div>
+	</div>
+</div>
+
+	<div id="signup-form" title="Signup for P-K.co">
+	<p class="validateTips">All form fields are required.</p>
+		<form action="{% url signup %}" method="post" id="sign-up-form">
+			<fieldset>
+				{% csrf_token %}
+				<label for="id_first_name">First name:</label>
+				<input type="text" name="first_name" id="id_first_name" class="text ui-widget-content ui-corner-all"  />
+				<label for="id_last_name">Last name:</label>
+				<input type="text" name="last_name" id="id_last_name" class="text ui-widget-content ui-corner-all"  />
+				<label for="id_username">Username:</label>
+				<input type="text" name="username" id="id_username" class="text ui-widget-content ui-corner-all"  />
+				<label for="id_email_address">Email address:</label>
+				<input type="text" name="email_address" id="id_email_address" class="text ui-widget-content ui-corner-all"  />
+				<label for="id_password">Password:</label>
+				<input type="password" name="password" id="id_password" class="text ui-widget-content ui-corner-all"  />
+				<label for="id_confirm_password">Confirm password:</label>
+				<input type="password" name="confirm_password" id="id_confirm_password" class="text ui-widget-content ui-corner-all"  />
+			</fieldset>
+		</form>
+	</div>
+</body>
+</html>
