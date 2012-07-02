@@ -48,9 +48,9 @@ USE_L10N = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_HOST = 'smtp.webfaction.com'
-EMAIL_HOST_USER = "t3hi3x"
-EMAIL_HOST_PASSWORD = "f8988a26"
+EMAIL_HOST = 'xxxxx'
+EMAIL_HOST_USER = "xxxxxx"
+EMAIL_HOST_PASSWORD = "xxxxx"
 DEFAULT_FROM_EMAIL = 'noreply@perrimark.com'
 SERVER_EMAIL = 'noreply@perrimark.com'
 
